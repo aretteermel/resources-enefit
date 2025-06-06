@@ -84,6 +84,10 @@ POST /api/resources/notify-all
 
 ## API Documentation
 
+[OpenApi docs](http://localhost:8080/swagger-ui/index.html#/)
+
+
+
 ### Create Resource
 
 ```http
