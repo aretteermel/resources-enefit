@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: resources
     ports:
-      - '5432:5432'
+      - '5455:5432'
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.2.1
