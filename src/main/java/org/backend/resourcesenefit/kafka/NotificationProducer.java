@@ -1,19 +1,35 @@
 package org.backend.resourcesenefit.kafka;
 
-import lombok.RequiredArgsConstructor;
+
+import org.backend.resourcesenefit.dto.ResourceDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-@RequiredArgsConstructor
-public class SimpleKafkaProducer {
+import java.util.List;
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+@Service
+public class NotificationProducer {
 
-    @Scheduled(fixedRate = 5000) // Every 5 seconds
-    public void sendSimpleMessage() {
-        kafkaTemplate.send("simple-topic", "Hello from Kafka @ " + System.currentTimeMillis());
-        System.out.println("📤 Sent simple Kafka message.");
+    private final KafkaTemplate<String, ResourceDto> kafkaTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(NotificationProducer.class);
+    private static final String TOPIC = "resource-updates";
+
+    public NotificationProducer(KafkaTemplate<String, ResourceDto> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
+
+    public void sendNotification(ResourceDto resourceDto) {
+        kafkaTemplate.send(TOPIC, resourceDto);
+        logger.info("📤 Sent Kafka notification: Resource with ID {} updated", resourceDto.getId());
+    }
+
+    public void sendAllResources(List<ResourceDto> resources) {
+        for (ResourceDto dto : resources) {
+            kafkaTemplate.send(TOPIC, dto);
+            logger.info("📤 Sent Resource with ID {} to Kafka", dto.getId());
+        }
+    }
+
 }

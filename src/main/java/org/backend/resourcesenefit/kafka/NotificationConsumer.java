@@ -1,13 +1,17 @@
 package org.backend.resourcesenefit.kafka;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class SimpleKafkaConsumer {
+@Service
+public class NotificationConsumer {
 
-    @KafkaListener(topics = "simple-topic", groupId = "test-group")
+    private static final Logger logger = LoggerFactory.getLogger(NotificationConsumer.class);
+
+    @KafkaListener(topics = "resource-updates", groupId = "notification-group")
     public void listen(String message) {
-        System.out.println("📥 Received Kafka message: " + message);
+        logger.info("📥 Received Kafka notification: {}", message);
     }
 }
